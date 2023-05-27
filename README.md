@@ -20,6 +20,7 @@ Python의 Selenium module을 활용하여 Google에서 image crawling을 통해 
 ## Image Crawling
 학습을 위한 이미지를 수집하기 위한 Image Crawling 과정은 다음과 같다. Chrome driver를 이용해서 Google image searching을 위한 URL을 탐색하는 driver를 생성한다. Dictionary 형식으로 저장한 일식 및 중식의 종류에 따른 검색어 각각에 대해 image searching을 순차적으로 시행한다. 각 시행에서 중복되는 이미지를 제외한 개별적인 이미지가 존재하는 URL을 얻고 모든 URL에서 이미지를 다운로드하여 Dictionary에 저장된 음식의 이미지 묶음을 생성한다.
 
+'''
 from urllib.parse import quote_plus           
 from bs4 import BeautifulSoup as bs  
 import time
@@ -31,6 +32,7 @@ from selenium.webdriver.common.by import By
 import urllib.request
 import os
 import pandas as pd
+'''
 
 웹브라우저에서 이미지를 검색하도록 하기 위해 Selenium에서 webdriver를 import하고, 검색한 이미지의 URL을 일시적으로 dataframe 형태로 저장하기 위해 pandas를 import한다.
 
