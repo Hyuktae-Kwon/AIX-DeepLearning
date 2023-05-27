@@ -131,6 +131,7 @@ chinese_foods에 포함된 Key에 대하여 같은 과정을 수행한다.
 
 ## Naming & Labelling
 
+```
 import os
 import json
 
@@ -139,35 +140,46 @@ for i in japanese_foods.keys():
     
     file_path = "./" + image_name + '/'
     file_names = os.listdir(file_path)
+```
 
 file_names를 생성한다.
 
+```
     j = 0
     for name in file_names:
         src = file_path + name
         dst = os.path.join(file_path, i + '_' + str(j) + '.jpg')
         os.rename(src, dst)
         j+=1
+```
 
 이제부터 json 파일을 생성하기 위한 작업을 수행한다.
 
+```
     file_names = os.listdir('./'+image_name)
-    
+```
+
 'japanese_foods' Dictionary의 Key를 나열하여 생성한 'image_name' Directory 내의 파일들을 리스트 형식으로 file_names에 저장한다.
 
+```
     tmp_json = []
    
     for j in file_names:
         tmp_json.append({'image_id': j, 'label': image_name})
-    
+```
+
 json 파일을 생성하기 전 List 'tmp_json'에 file_names에 포함된 이미지의 이름과 Labelling한 해당 이미지의 종류를 저장한다.
 
+```
     with open(i + '.json', 'w') as outfile:
         json.dump(tmp_json, outfile, indent=4, sort_keys=True)
+```
         
 tmp_json이 포함하는 정보를 json 형식으로 저장한다.
 
+```
 for i in chinese_foods.keys():
     ...
+```
 
 chinese_foods의 Key에 대하여 동일 작업을 수행한다.
