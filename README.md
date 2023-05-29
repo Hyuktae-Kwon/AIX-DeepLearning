@@ -19,12 +19,19 @@ CNN 기법을 이용하여 서로 다른 이미지를 종류에 따라 분류하
 # Our Method
 
 ## Dataset
-Python의 Selenium module을 활용하여 Google에서 image crawling을 통해 Google 검색량 상위 항목에 해당하는 음식 중 모델 학습에 효과적일 것으로 판단되는 10종류의 일식(nabe, soba, ramen, Japanese curry, sushi, udon, karaage, onigiri, gyudon, okonomiyaki)와 10종류의 중식(congee, dong po rou, baozi, chaofan, zhajiangmian, sweet and sour pork, mapotofu, wonton soup, mooncake, pecking duck)의 이미지를 각 종류별로 약 400개씩 수집한다. 이후 수집한 이미지 중 서로 중복되는 이미지를 제거하여 트레이닝을 위한 데이터셋을 얻는다. 검색량 상위를 차지하는 한식에 대해서도 같은 방식의 과정을 수행하여 모델이 열량을 추정하는 데 사용할 한식 이미지 데이터셋을 얻는다.
+Selenium 모듈을 활용하여 구글 이미지 검색을 통해 모델 학습에 효과적일 것으로 판단되는 10종류의 음식 이미지를 한식, 중식, 일식 별로 수집한다. 한식의 경우 한식 재단의 ‘한국인이 즐겨먹는 음식통계’를 참고하여 10종의 음식을 선정하였다. 중식과 일식의 경우 20종의 음식을 무작위로 선정한 후 음식 중 1회 제공량 당 칼로리를 계산하기 쉬우며 구글 검색량이 많은 10종의 음식을 선정하였다. 
+<br>**음식 선정 예시**
 
-## Image Crawling
-학습을 위한 이미지를 수집하기 위한 Image Crawling 과정은 다음과 같다. Chrome driver를 이용해서 Google image searching을 위한 URL을 탐색하는 driver를 생성한다. Dictionary 형식으로 저장한 일식 및 중식의 종류에 따른 검색어 각각에 대해 image searching을 순차적으로 시행한다. 각 시행에서 중복되는 이미지를 제외한 개별적인 이미지가 존재하는 URL을 얻고 모든 URL에서 이미지를 다운로드하여 Dictionary에 저장된 음식의 이미지 묶음을 생성한다.
+위와 같은 방법으로 선정된 음식은 다음과 같다.
+<br>한식 10종: 칼국수, 짬뽕, 김밥, 비빔밥, 보쌈, 배추김치, 깍두기, 닭갈비, 김치볶음밥, 불고기
+<br>일식 10종: nabe, soba, ramen, Japanese curry, sushi, udon, karaage, onigiri, gyudon, okonomiyaki
+<br>중식 10종: congee, dong po rou, baozi, chaofan, zhajiangmian, sweet and sour pork, mapotofu, wonton soup, mooncake, pecking duck
+<br>각 음식의 이미지를 약 400개씩 수집한 후 모델 학습에 적절하다고 판단되는 이미지 100여개를 직접 선정한다.
 
-```
+## 이미지 데이터 수집
+학습을 위한 이미지를 수집하기 위한 이미지 수집 과정은 다음과 같다. Chrome driver를 이용해서 Google image searching을 위한 URL을 탐색하는 driver를 생성한다. Dictionary 형식으로 저장한 일식 및 중식의 종류에 따른 검색어 각각에 대해 image searching을 순차적으로 시행한다. 각 시행에서 중복되는 이미지를 제외한 개별적인 이미지가 존재하는 URL을 얻고 모든 URL에서 이미지를 다운로드하여 Dictionary에 저장된 음식의 이미지 묶음을 생성한다.
+
+```python
 from urllib.parse import quote_plus           
 from bs4 import BeautifulSoup as bs  
 import time
@@ -135,7 +142,7 @@ chinese_foods에 포함된 Key에 대하여 같은 과정을 수행한다.
 
 ## Naming & Labelling
 
-```
+```python
 import os
 import json
 
@@ -148,7 +155,7 @@ for i in japanese_foods.keys():
 
 file_names를 생성한다.
 
-```
+```python
     j = 0
     for name in file_names:
         src = file_path + name
@@ -159,13 +166,13 @@ file_names를 생성한다.
 
 이제부터 json 파일을 생성하기 위한 작업을 수행한다.
 
-```
+```python
     file_names = os.listdir('./'+image_name)
 ```
 
 'japanese_foods' Dictionary의 Key를 나열하여 생성한 'image_name' Directory 내의 파일들을 리스트 형식으로 file_names에 저장한다.
 
-```
+```python
     tmp_json = []
    
     for j in file_names:
@@ -174,7 +181,7 @@ file_names를 생성한다.
 
 json 파일을 생성하기 전 List 'tmp_json'에 file_names에 포함된 이미지의 이름과 Labelling한 해당 이미지의 종류를 저장한다.
 
-```
+```python
     with open(i + '.json', 'w') as outfile:
         json.dump(tmp_json, outfile, indent=4, sort_keys=True)
 ```
