@@ -104,7 +104,8 @@ for i, j in korean_foods.items():
 중복되는 url을 제거하고 이미지를 다운로드한다.
 
 ```python
-    print("전체 다운로드한 이미지 개수: {}\n동일한 이미지를 제거한 이미지 개수: {}".format(len(images_url), len(pd.DataFrame(images_url)[0].unique())))
+    print("전체 다운로드한 이미지 개수: {}\n동일한 이미지를 제거한 이미지 개수: {}"
+         .format(len(images_url), len(pd.DataFrame(images_url)[0].unique())))
     images_url=pd.DataFrame(images_url)[0].unique()
     
     for t, url in enumerate(images_url, 0):        
