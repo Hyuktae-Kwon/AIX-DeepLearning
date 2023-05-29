@@ -159,5 +159,6 @@ for i in korean_foods.keys():
 for i in chinese_foods.keys():
     ...
 ```
-
+## 이미지 전처리
+이미지 전처리 방법에는 ~가 있다
 
