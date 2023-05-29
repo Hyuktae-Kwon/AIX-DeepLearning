@@ -46,10 +46,10 @@ chrome_path ='C:\Temp\chromedriver.exe'
 base_url = "http://www.google.co.kr/imghp?hl=ko"
 ```
 
-더 많은 검색 결과를 저장하기 위해 scroll down 작업을 수행할 함수를 정의다.
+더 많은 검색 결과를 저장하기 위해 scroll down 작업을 수행할 함수를 정의한다.
 ```python
 def selenium_scroll_option():
-  SCROLL_PAUSE_SEC = 3
+  SCROLL_PAUSE_SEC = 3 # 스크롤을 내리는 동작 사이의 시간
   
   last_height = driver.execute_script("return document.body.scrollHeight")
   
