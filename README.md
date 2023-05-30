@@ -5,7 +5,9 @@
 # Title: 음식 이미지 인식을 통한 칼로리 계산
 
 2019087792 권혁태 kwon0111@hanyang.ac.kr
+
 2023090700 유시형 sihyeongyu9@gmail.com
+
 2019082333 박영주 marchingwthu@gmail.com
 
 # Introduction
