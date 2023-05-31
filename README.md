@@ -70,7 +70,7 @@ def selenium_scroll_option():
     last_height = new_height
 ```
 
-음식의 이름을 key로 하고 검색어를 value로하는 dictinary를 선언한다.
+음식의 이름을 key로 하고 검색어를 value로하는 dictionary를 선언한다.
 ```python
 korean_foods = {"kalguksu":"칼국수", "champon":"짬뽕", "kimbap":"김밥", "bibimbap":"비빔밥", "bossam":"보쌈",
                 "kimchi":"배추김치", "radish kimchi":"깍두기", "dak galbi":"닭갈비", "kimchi fried rice":"김치볶음밥", "bulgogi":"불고기"}
@@ -80,7 +80,7 @@ chinese_foods = {"congee":"粥", "dong po rou":"东坡肉", "baozi":"包子", "c
                   "sweet and sour pork":"糖醋肉", "mapotofu":"麻婆豆腐", "wonton soup":"馄饨汤", "mooncake":"月饼", "pecking duck":"烤鸭"}
 ```
 
-해당 dictinary의 key를 이름으로 하는 디렉토리를 생성한 후 Dictionary의 value를 검색창에 입력한다. 더 많은 검색 결과를 위해 스크롤을 내린 후 이미지들의 url을 images_url 리스트에 저장한다.
+해당 dictionary의 key를 이름으로 하는 디렉토리를 생성한 후 dictionary의 value를 검색창에 입력한다. 더 많은 검색 결과를 위해 스크롤을 내린 후 이미지들의 url을 images_url 리스트에 저장한다.
 ```python
 for i, j in korean_foods.items():
     image_name = i.replace(" ", "_")
@@ -165,5 +165,5 @@ for i in chinese_foods.keys():
     ...
 ```
 ## 이미지 전처리
-이미지 전처리 방법에는 ~가 있다
+
 
