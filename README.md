@@ -167,5 +167,405 @@ for i in chinese_foods.keys():
 
 ## Methodology
 ### 이미지 전처리
+### Data augmentation
 
+Data augmentation을 준비한다.
+```python
+from glob import glob
+from PIL import Image
+image_datas = glob('./korean_food/*/*.jpg')
+for imagename in image_datas:
+    image = Image.open(imagename)
+    lr_image = image.transpose(Image.FLIP_LEFT_RIGHT) # 좌우 반전
+    lr_imagename = imagename.replace(".jpg", "") + " " + ".jpg"
+    ud_image = image.transpose(Image.FLIP_TOP_BOTTOM) # 상하 반전
+    ud_imagename = imagename.replace(".jpg", "") + "  " + ".jpg"
 
+    lr_image.save(lr_imagename)
+    ud_image.save(ud_imagename)
+```
+
+수집한 이미지 각각에 대응하는 좌우 반전 이미지와 상하 반전 이미지를 생성하여 데이터셋의 크기를 세 배로 만든다.
+```python
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from glob import glob\n",
+    "from PIL import Image"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "image_datas = glob('./korean_food/*/*.jpg')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "for imagename in image_datas:\n",
+    "    image = Image.open(imagename)\n",
+    "    lr_image = image.transpose(Image.FLIP_LEFT_RIGHT)       #좌우 반전\n",
+    "    lr_imagename = imagename.replace(\".jpg\", \"\") + \" \" + \".jpg\"\n",
+    "    ud_image = image.transpose(Image.FLIP_TOP_BOTTOM)       #상하 반전\n",
+    "    ud_imagename = imagename.replace(\".jpg\", \"\") + \"  \" + \".jpg\"\n",
+    "\n",
+    "    lr_image.save(lr_imagename)\n",
+    "    ud_image.save(ud_imagename)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "foodkcal",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.16"
+  },
+  "orig_nbformat": 4
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
+```
+
+중, 일식의 데이터셋에 대하여 Data augmentation을 수행한다.
+```python
+...
+"image_datas = glob('./chinese_food/*/*.jpg')"
+...
+```
+
+### Modeling
+
+```python
+import tensorflow as tf
+from tensorflow import keras
+from sklearn.model_selection import train_test_split
+import numpy as np
+from glob import glob
+from PIL import Image
+import matplotlib.pyplot as plt
+import re
+import os
+```
+
+```python
+image_datas = glob('./korean_foods/*/*.jpg')
+class_name = ["kalguksu", "champon", "kimbap", "bibimbap", "bossam",
+                "kimchi", "radish_kimchi", "dak_galbi", "kimchi_fried_rice", "bulgogi"]
+dic = {"kalguksu":0, "champon":1, "kimbap":2, "bibimbap":3, "bossam":4,
+                "kimchi":5, "radish_kimchi":6, "dak_galbi":7, "kimchi_fried_rice":8, "bulgogi":9}
+```
+
+```python
+X = []
+Y = []
+for imagename in image_datas:
+    image = Image.open(imagename)
+    image = image.resize((128, 128))
+    image = np.array(image)
+    X.append(image)
+    label = imagename.split('\\')[2].replace('.jpg','').replace(' ','')
+    label = re.sub(r"[0-9]", "", label)
+    label = label[:-1]
+    label = dic[label]
+    Y.append(label)
+```
+
+```python
+X = np.array(X)    
+Y = np.array(Y)
+```
+
+```python
+train_images, test_images, train_labels, test_labels = train_test_split(X, Y, test_size=0.2, 
+                                                    shuffle=True, random_state=44)
+
+train_labels = train_labels[..., tf.newaxis]
+test_labels = test_labels[..., tf.newaxis]
+
+train_images.shape, train_labels.shape, test_images.shape, test_labels.shape
+```
+
+training set의 각 class 별 image 수를 확인한다.
+```python
+unique, counts = np.unique(np.reshape(train_labels, (866,)), axis=-1, return_counts=True)
+dict(zip(unique, counts))
+```
+
+test set의 각 class 별 image 수를 확인한다.
+```python
+unique, counts = np.unique(np.reshape(test_labels, (217,)), axis=-1, return_counts=True)
+dict(zip(unique, counts))
+```
+
+```python
+N_TRAIN = train_images.shape[0]
+N_TEST = test_images.shape[0]
+```
+
+데이터를 확인한다.
+```python
+plt.figure(figsize=(15,9))
+for i in range(15):
+    img_idx = np.random.randint(0, 875)
+    plt.subplot(3,5,i+1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(train_images[img_idx])
+    plt.xlabel(class_name[train_labels[img_idx][0]])
+```
+
+pixel 값을 0~1 사이로 조정한다.
+```python
+train_images = train_images.astype(np.float32) / 255.
+test_images = test_images.astype(np.float32) / 255.
+```
+
+label을 onehot-encoding 한다.
+```python
+train_labels = keras.utils.to_categorical(train_labels)
+test_labels = keras.utils.to_categorical(test_labels)
+```
+
+```python
+print(train_images.shape, train_labels.shape)
+print(test_images.shape, test_labels.shape)
+```
+
+```python
+learning_rate = 0.0001
+N_EPOCHS = 50
+N_BATCH = 40
+N_CLASS = 10
+```
+
+Dataset을 구성한다.
+```python
+## dataset 구성    
+train_dataset = tf.data.Dataset.from_tensor_slices((train_images, train_labels)).shuffle(
+                buffer_size=875).batch(N_BATCH).repeat()
+test_dataset = tf.data.Dataset.from_tensor_slices((test_images, test_labels)).batch(
+				N_BATCH)
+```
+
+Sequential API를 사용하여 Model을 구성한다.
+```python
+def create_model():
+    model = keras.Sequential()
+    model.add(keras.layers.Conv2D(filters=32, kernel_size=3, 
+                                  activation='relu', padding='SAME', 
+                                  input_shape=(128, 128, 3)))
+    model.add(keras.layers.MaxPool2D(padding='SAME'))
+    model.add(keras.layers.Conv2D(filters=64, kernel_size=3, 
+                                  activation='relu', padding='SAME'))
+    model.add(keras.layers.MaxPool2D(padding='SAME'))
+    model.add(keras.layers.Conv2D(filters=128, kernel_size=3, 
+                                  activation='relu', padding='SAME'))
+    model.add(keras.layers.MaxPool2D(padding='SAME'))
+    model.add(keras.layers.Flatten())
+    model.add(keras.layers.Dense(256, activation='relu'))
+    model.add(keras.layers.Dropout(0.4))
+    model.add(keras.layers.Dense(10, activation='softmax'))
+    return model
+```
+
+Model을 생성하고 compiling한다.
+```python
+model = create_model()
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate),
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+model.summary()
+```
+
+```python
+steps_per_epoch = N_TRAIN//N_BATCH
+validation_steps = N_TEST//N_BATCH
+print(steps_per_epoch, validation_steps)
+```
+
+training 실시한다.
+```python
+history = model.fit(train_dataset, epochs=N_EPOCHS, steps_per_epoch=steps_per_epoch, 
+                    validation_data=test_dataset, validation_steps=validation_steps)
+```
+
+```python
+model.evaluate(test_dataset)
+```
+
+loss에 대한 plotting을 실시한다.
+```python
+plt.plot(history.history['loss'], 'b-', label='loss')
+plt.plot(history.history['val_loss'], 'r--', label='val_loss')
+plt.xlabel('Epoch')
+plt.legend()
+plt.show()
+```
+![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/e539bc0b-3d05-4357-b5b0-47263eabf037)
+
+accuracy에 대한 plotting을 실시한다.
+```python
+plt.plot(history.history['accuracy'], 'b-', label='accuracy')
+plt.plot(history.history['val_accuracy'], 'r--', label='val_accuracy')
+plt.xlabel('Epoch')
+plt.legend()
+plt.show()
+```
+![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/0cf78d09-bb73-4281-9a73-13d182c44e1e)
+
+결과를 나타낸다.
+```python
+def plot_image(i, predictions_array, true_label, img):
+    predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]
+    plt.grid(False)
+    plt.xticks([])
+    plt.yticks([])
+
+    plt.imshow(img)
+
+    predicted_label = np.argmax(predictions_array)
+    if predicted_label == true_label:
+        color = 'blue'
+    else:
+        color = 'red'
+
+    plt.xlabel("{} {:2.0f}% ({})".format(class_name[predicted_label],
+                                100*np.max(predictions_array),
+                                class_name[true_label]),
+                                color=color)
+
+def plot_value_array(i, predictions_array, true_label):
+    predictions_array, true_label = predictions_array[i], true_label[i]
+    plt.grid(False)
+    plt.xticks(range(N_CLASS), class_name, rotation=90)
+    plt.yticks([])
+    thisplot = plt.bar(range(N_CLASS), predictions_array, color="#777777")
+    plt.ylim([0, 1]) 
+    predicted_label = np.argmax(predictions_array)
+ 
+    thisplot[predicted_label].set_color('red')
+    thisplot[true_label].set_color('blue')
+```
+
+```python
+rnd_idx = np.random.randint(1, N_TEST//N_BATCH)
+img_cnt = 0
+for images, labels in test_dataset:
+    img_cnt += 1
+    if img_cnt != rnd_idx:
+        continue
+    predictions = model(images, training=False)
+    num_rows = 5
+    num_cols = 3
+    num_images = num_rows*num_cols
+    labels = tf.argmax(labels, axis=-1)
+    plt.figure(figsize=(3*2*num_cols, 4*num_rows))
+    plt.subplots_adjust(hspace=1.0)
+    for i in range(num_images):
+        plt.subplot(num_rows, 2*num_cols, 2*i+1)
+        plot_image(i, predictions.numpy(), labels.numpy(), images.numpy())
+        plt.subplot(num_rows, 2*num_cols, 2*i+2)
+        plot_value_array(i, predictions.numpy(), labels.numpy())        
+    break
+```
+![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/381a0aa7-6de9-4a5c-b52f-3486bd043be6)
+
+### Test & Result
+
+앞서 10종류의 한식으로 학습시킨 결과를 바탕으로 하여, 임의로 선정한 6종류의 한식(Bindaetteok, cold_noodles, japchae, pork_barbecue, tteokbokki, yukgaejang)에 대하여 열량을 추정한다.
+```python
+cur_dir = os.getcwd()
+ckpt_dir = 'checkpoints'
+file_name = 'korean_cnn_weights.h5'
+
+dir = os.path.join(cur_dir, ckpt_dir)
+os.makedirs(dir, exist_ok=True)
+
+file_path = os.path.join(dir, file_name)
+```
+
+```python
+model.save(file_path)
+```
+
+```python
+food_kcal = {"kalguksu":420, "champon":688, "kimbap":485, "bibimbap":586, "bossam":1296,
+                "kimchi":29, "radish_kimchi":19, "dak_galbi":669, "kimchi_fried_rice":530, "bulgogi":471}
+```
+
+```python
+testimg_datas = glob('./test_img/*.jpg')
+
+X2 = []
+Y2 = []
+for testimgname in testimg_datas:
+    image = Image.open(testimgname)
+    image = image.resize((128, 128))
+    image = np.array(image)
+    X2.append(image)
+    label = testimgname.split('\\')[1].replace('.jpg','').replace(' ','')
+    Y2.append(label)
+
+X2 = np.array(X2)  
+
+X2 = X2.astype(np.float32) / 255.
+
+predictions = model(X2, training=False)
+
+num_rows = 2
+num_cols = 3
+
+def calculate_kcal(predict_array):
+    kcal = 0
+    for i in range(10):
+        kcal += predict_array[i] * food_kcal[class_name[i]]
+    return kcal
+
+plt.figure(figsize=(3*2*num_cols, 4*num_rows))
+plt.subplots_adjust(hspace=1.0)
+
+for i in range(len(X2)):
+    plt.subplot(num_rows, 2*num_cols, 2*i+1)
+    plt.grid(False)
+    plt.xticks([])
+    plt.yticks([])
+    plt.imshow(X2[i])
+    plt.xlabel("{} \nexpected : {:2.0f}kcal".format(Y2[i], calculate_kcal(predictions.numpy()[i])))
+    plt.subplot(num_rows, 2*num_cols, 2*i+2)
+    plt.grid(False)    
+    plt.xticks(range(N_CLASS), class_name, rotation=90)
+    plt.yticks([])
+    thisplot = plt.bar(range(N_CLASS), predictions.numpy()[i], color="#777777")
+    plt.ylim([0, 1]) 
+    predicted_label = np.argmax(predictions.numpy()[i])
+    thisplot[predicted_label].set_color('red')
+
+    print(Y2[i], calculate_kcal(predictions.numpy()[i]))
+```
+![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/b438ad63-bb4d-47cc-a6d4-37fe3968bb24)
