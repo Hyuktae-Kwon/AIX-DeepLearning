@@ -33,7 +33,7 @@ Selenium 모듈을 활용하여 구글 이미지 검색을 통해 모델 학습�
 <br>중식 10종: congee, dong po rou, baozi, chaofan, zhajiangmian, sweet and sour pork, mapotofu, wonton soup, mooncake, pecking duck
 <br>각 음식의 이미지를 약 400개씩 수집한 후 모델 학습에 적절하다고 판단되는 이미지 100여개를 직접 선정하였다.
 
-## 이미지 데이터 수집
+### 이미지 데이터 수집
 음식 종류를 결정한 후 구글 이미지 검색 결과를 저장하기 위해 ‘앱 애플리케이션 자동화를 위한 프레임워크’인 Selenium을 활용하였다.
 
 ```python
@@ -124,7 +124,7 @@ for i, j in chinese_foods.items():
   ...
 ```
 
-## Naming & Labeling
+### Naming & Labeling
 
 다운받은 이미지 파일들의 이름을 변경한다.
 ```python
@@ -164,6 +164,8 @@ for i in korean_foods.keys():
 for i in chinese_foods.keys():
     ...
 ```
-## 이미지 전처리
+
+## Methodology
+### 이미지 전처리
 
 
