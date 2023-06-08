@@ -166,7 +166,80 @@ for i in chinese_foods.keys():
 ```
 
 ## Methodology
+
 ### 이미지 전처리
+
+```python
+import os
+from PIL import Image
+from numpy import expand_dims
+from tensorflow.keras.utils import load_img
+from tensorflow.keras.utils import img_to_array
+from keras.preprocessing.image import ImageDataGenerator
+from matplotlib import pyplot as plt
+
+korean_foods = {"kalguksu":"칼국수", "champon":"짬뽕", "kimbap":"김밥", "bibimbap":"비빔밥", "bossam":"보쌈",
+                "kimchi":"배추김치", "radish kimchi":"깍두기", "dak galbi":"닭갈비", "kimchi fried rice":"김치볶음밥", "bulgogi":"불고기"}
+japanese_foods = {"nabe":"鍋", "soba":"そば", "ramen":"ラーメン", "japanese curry":"カレー","sushi":"寿司",
+                  "udon":"うどん", "karaage":"唐揚げ","onigiri":"おにぎり","gyudon":"牛丼", "okonomiyaki":"お好み焼き"}
+chinese_foods = {"congee":"粥", "dong po rou":"东坡肉", "baozi":"包子", "chaofan":"炒饭", "zhajiangmian":"炸酱面",
+                  "sweet and sour pork":"糖醋肉", "mapotofu":"麻婆豆腐", "wonton soup":"馄饨汤", "mooncake":"月饼", "pecking duck":"烤鸭"}
+```
+
+이미지의 크기를 통일하고, 'image_name_resized' directory에 크기 조정된 이미지를 저장한다.
+```python
+for i, j in korean_foods.items():
+    image_name = i.replace(" ", "_")
+    file_path = "./" + image_name + '/'
+    file_names = os.listdir(file_path)
+
+    for f in file_names:
+        img = Image.open(file_path + f)
+        resized_img = img.resize((256, 256))
+
+        
+        if not os.path.exists("./" + image_name + "_resized"): 
+            os.makedirs("./" + image_name + "_resized")
+
+	title, ext = os.path.splitext(f)
+        resized_img.save("./" + image_name + "_resized/" + title + "_r" + ext)
+
+```
+
+데이터 전처리를 실시한다.
+```python
+for i, j in korean_foods.items():
+    image_name = i.replace(" ", "_")
+    file_path = "./" + image_name + "_resized" + '/'
+    file_names = os.listdir(file_path)
+    print(file_names)
+    for f in file_names:
+        img = load_img(file_path + f)
+        data = img_to_array(img)
+        samples = expand_dims(data, 0)
+        datagen = ImageDataGenerator(
+                                    zoom_range=[0.8, 1.0],
+                                    rotation_range=45,
+                                    brightness_range=[0.3, 1.2],
+                                    shear_range=0.2,
+                                    horizontal_flip=True,
+                                    vertical_flip=True,
+                                    height_shift_range=0.3,
+                                    width_shift_range=0.3
+        )
+
+# ImageDataGenerator로 변경된 이미지 확인
+    it = datagen.flow(samples, batch_size=1)
+    fig = plt.figure(figsize=(20,20))
+    plt.title(i)
+    for i in range(12):
+        plt.subplot(4, 3, 1 + i)
+        batch = it.next()
+        image = batch[0].astype('uint8')
+        plt.imshow(image)
+    plt.show()
+```
+
 ### Data augmentation
 
 Data augmentation을 준비한다.
@@ -185,7 +258,7 @@ for imagename in image_datas:
     ud_image.save(ud_imagename)
 ```
 
-수집한 이미지 각각에 대응하는 좌우 반전 이미지와 상하 반전 이미지를 생성하여 데이터셋의 크기를 세 배로 만든다.
+수집한 이미지 각각에 대응하는 좌우 반전 이미지와 상하 반전 이미지를 생성하여 데이터셋의 크기를 세 배로 키운다.
 ```python
 {
  "cells": [
@@ -258,7 +331,7 @@ for imagename in image_datas:
 ...
 ```
 
-### Modeling
+### Modeling & Training
 
 ```python
 import tensorflow as tf
@@ -366,7 +439,6 @@ N_CLASS = 10
 
 Dataset을 구성한다.
 ```python
-## dataset 구성    
 train_dataset = tf.data.Dataset.from_tensor_slices((train_images, train_labels)).shuffle(
                 buffer_size=875).batch(N_BATCH).repeat()
 test_dataset = tf.data.Dataset.from_tensor_slices((test_images, test_labels)).batch(
@@ -439,7 +511,23 @@ plt.show()
 ```
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/0cf78d09-bb73-4281-9a73-13d182c44e1e)
 
-결과를 나타낸다.
+같은 방식으로 중식과 일식의 이미지를 학습하고 트레이닝 횟수에 따라 loss와 accuracy를 plotting한 결과는 다음과 같다.
+
+chinese_foods
+
+![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/12c75843-6b59-4785-a0ae-652497a21f04)
+
+![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/e8e8d395-6994-4b19-9dfb-7c44abb2ed72)
+
+japanese_foods
+
+![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/311fb7c7-1f67-44bb-9381-b1ca03c0adc3)
+
+![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/af2ab9dd-31d9-4a12-8e69-2cb35201cfe4)
+
+### Test
+
+한식 샘플 이미지가 나타내는 음식의 종류를 추정한다. 각 이미지가 담고 있는 음식이 실제로 무엇일지 모델이 이미 트레이닝을 마친 10가지 종류의 음식(한식에서)에 대하여 부여한 기댓값을 나타내었다. 음식 종류의 기댓값을 막대그래프로 나타내었다.
 ```python
 def plot_image(i, predictions_array, true_label, img):
     predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]
@@ -496,7 +584,15 @@ for images, labels in test_dataset:
 ```
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/381a0aa7-6de9-4a5c-b52f-3486bd043be6)
 
-### Test & Result
+중식 샘플 이미지가 나타내는 음식의 종류를 추정한다.
+
+![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/24e66c6b-8ddb-4a27-ad2b-5d8ab3381f35)
+
+일식 샘플 이미지가 나타내는 음식의 종류를 추정한다.
+
+![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/aa57f844-542a-4df5-a36a-2cf716959917)
+
+### Result
 
 앞서 10종류의 한식으로 학습시킨 결과를 바탕으로 하여, 임의로 선정한 6종류의 한식(Bindaetteok, cold_noodles, japchae, pork_barbecue, tteokbokki, yukgaejang)에 대하여 열량을 추정한다.
 ```python
