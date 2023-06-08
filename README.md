@@ -595,7 +595,7 @@ for images, labels in test_dataset:
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/aa57f844-542a-4df5-a36a-2cf716959917)
 
 ## Result
-열량 추정을 위하여 임의로 6종류의 한식(Bindaetteok, cold_noodles, japchae, pork_barbecue, tteokbokki, yukgaejang)을 선정하였다. 각 '학습한 음식'의 열량을 Q, 선정한 6종류의 음식을 나타내는 어떤 이미지가 각 '학습한 음식'에 대하여 갖는 기댓값을 E라고 할 때 그 이미지가 나타내는 에 대하여 추정한 열량은 다음과 같다.
+열량 추정을 위하여 임의로 6종류의 한식(Bindaetteok, cold_noodles, japchae, pork_barbecue, tteokbokki, yukgaejang)을 선정하였다. 각 '학습한 음식'의 열량을 Q, 선정한 6종류의 음식을 나타내는 어떤 이미지가 각 '학습한 음식'에 대하여 갖는 기댓값을 E라고 할 때 그 이미지가 나타내는 음식에 대하여 모델이 추정하는 열량은 다음과 같다.
 
 $$\sum_{i=1}^N Q_iE_i$$
 
