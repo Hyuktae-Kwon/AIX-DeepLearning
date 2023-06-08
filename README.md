@@ -594,10 +594,15 @@ for images, labels in test_dataset:
 
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/aa57f844-542a-4df5-a36a-2cf716959917)
 
-### Result
-열량 추정을 위하여 임의로 6종류의 한식(Bindaetteok, cold_noodles, japchae, pork_barbecue, tteokbokki, yukgaejang)을 선정하였다. 제시한 음식들이 갖는 실제 열량은 다음과 같다.
+## Result
+열량 추정을 위하여 임의로 6종류의 한식(Bindaetteok, cold_noodles, japchae, pork_barbecue, tteokbokki, yukgaejang)을 선정하였다. 모델은 학습의 결과를 바탕으로 '각 이미지가 나타내는 음식'이 '학습한 음식'과 갖는 유사도에 따라 '학습한 음식'에 대하여 갖는 기대치를 산출한다. 기대치를 산출할 때 '학습한 음식'으로 이루어지는 후보군 내의 모든 후보 음식에게 부여된 기대치를 모두 더하면 1이 된다. 각 '학습한 음식'의 열량을 Q, 각 '학습한 음식'에 대하여 산출한 기대치를 E라고 할 때 '이미지가 나타내는 음식'에 대하여 추정한 열량은 다음과 같다.
+
+\sum_{i=1}^N Q_iE_i
+
+임의로 선정한 6종류의 음식들이 갖는 실제 열량은 다음과 같다.
 
 |음식|열량|
+|---|---|
 |Bindaetteok|194kcal|
 |cold_noodles|450kcal|
 |japchae|191kcal|
@@ -690,6 +695,7 @@ for i in range(len(X2)):
 **한식 데이터셋으로 학습을 거친 후 열량을 추정한 결과 및 백분율 상대오차**
 
 |음식|결과(오차)|
+|---|---|
 |Bindaetteok|1073.38kcal(+453.29%)|
 |cold_noodles|505.33kcal(+12.30%)|
 |japchae|642.05kcal(+236.15)|
@@ -700,6 +706,7 @@ for i in range(len(X2)):
 **중식 데이터셋으로 학습을 거친 후 열량을 추정한 결과 및 백분율 상대오차**
 
 |음식|결과(오차)|
+|---|---|
 |Bindaetteok|470.34kcal(+142.44%)|
 |cold_noodles|245.08kcal(-45.54%)|
 |japchae|820.54kcal(+329.60%)|
@@ -710,6 +717,7 @@ for i in range(len(X2)):
 **일식 데이터셋으로 학습을 거친 후 열량을 추정 결과 및 백분율 상대오차**
 
 |음식|결과(오차)|
+|---|---|
 |Bindaetteok|498.82kcal(+157.12%)|
 |cold_noodles|569.11kcal(+26.47%)|
 |japchae|480.60kcal(+151.62%)|
