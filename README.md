@@ -35,7 +35,6 @@ Selenium 모듈을 활용하여 구글 이미지 검색을 통해 모델 학습�
 
 ### 이미지 데이터 수집
 음식 종류를 결정한 후 구글 이미지 검색 결과를 저장하기 위해 ‘앱 애플리케이션 자동화를 위한 프레임워크’인 Selenium을 활용하였다.
-
 ```python
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -107,7 +106,6 @@ for i, j in korean_foods.items():
 ```
 
 중복되는 url을 제거하고 이미지를 다운로드한다.
-
 ```python
     print("전체 다운로드한 이미지 개수: {}\n동일한 이미지를 제거한 이미지 개수: {}"
          .format(len(images_url), len(pd.DataFrame(images_url)[0].unique())))
@@ -128,8 +126,7 @@ for i, j in japanese_foods.items():
 ```
 
 ### Naming & Labeling
-
-다운받은 이미지 파일들의 이름을 변경한다.
+다운로드 이미지 파일들의 이름을 변경한다.
 ```python
 
 for i in korean_foods.keys():
@@ -147,7 +144,6 @@ for i in korean_foods.keys():
 ```
 
 Naming 작업이 완료되면 각각의 이미지에 해당 이미지의 id와 음식의 종류를 labeling 하는 작업을 수행한다.
-
 ```python
 for i in korean_foods.keys():
     image_name = i.replace(" ", "_") 
@@ -174,7 +170,6 @@ for i in japanese_foods.keys():
 ## Methodology
 
 ### 이미지 전처리
-
 ```python
 import os
 from PIL import Image
@@ -247,12 +242,11 @@ for i, j in korean_foods.items():
 ```
 
 ### Data augmentation
-
 Data augmentation을 준비한다.
 ```python
 from glob import glob
 from PIL import Image
-image_datas = glob('./korean_food/*/*.jpg')
+image_datas = glob('./korean_foods/*/*.jpg')
 for imagename in image_datas:
     image = Image.open(imagename)
     lr_image = image.transpose(Image.FLIP_LEFT_RIGHT) # 좌우 반전
@@ -284,7 +278,7 @@ for imagename in image_datas:
    "metadata": {},
    "outputs": [],
    "source": [
-    "image_datas = glob('./korean_food/*/*.jpg')"
+    "image_datas = glob('./korean_foods/*/*.jpg')"
    ]
   },
   {
@@ -333,16 +327,15 @@ for imagename in image_datas:
 중, 일식의 데이터셋에 대하여 Data augmentation을 수행한다.
 ```python
 ...
-"image_datas = glob('./chinese_food/*/*.jpg')"
+"image_datas = glob('./chinese_foods/*/*.jpg')"
 ...
 
 ...
-"image_datas = glob('./japanese_food/*/*.jpg')"
+"image_datas = glob('./japanese_foods/*/*.jpg')"
 ...
 ```
 
 ### Modeling & Training
-
 ```python
 import tensorflow as tf
 from tensorflow import keras
@@ -523,20 +516,19 @@ plt.show()
 
 같은 방식으로 중식과 일식의 이미지를 학습하고 트레이닝 횟수에 따라 loss와 accuracy를 plotting한 결과는 다음과 같다.
 
-chinese_foods
+**중식 이미지 학습 결과**
 
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/12c75843-6b59-4785-a0ae-652497a21f04)
 
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/e8e8d395-6994-4b19-9dfb-7c44abb2ed72)
 
-japanese_foods
+**일식 이미지 학습 결과**
 
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/311fb7c7-1f67-44bb-9381-b1ca03c0adc3)
 
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/af2ab9dd-31d9-4a12-8e69-2cb35201cfe4)
 
 ### Test
-
 한식 샘플 이미지가 나타내는 음식의 종류를 추정한다. 각 이미지가 담고 있는 음식이 실제로 무엇일지 모델이 이미 트레이닝을 마친 10가지 종류의 음식(한식에서)에 대하여 부여한 기댓값을 나타내었다. 음식 종류의 기댓값을 막대그래프로 나타내었다.
 ```python
 def plot_image(i, predictions_array, true_label, img):
@@ -603,18 +595,17 @@ for images, labels in test_dataset:
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/aa57f844-542a-4df5-a36a-2cf716959917)
 
 ### Result
-
 열량 추정을 위하여 임의로 6종류의 한식(Bindaetteok, cold_noodles, japchae, pork_barbecue, tteokbokki, yukgaejang)을 선정하였다. 제시한 음식들이 갖는 실제 열량은 다음과 같다.
 
-<br>Bindaetteok 	194kcal
-<br>cold_noodles 	450kcal
-<br>japchae 	191kcal
-<br>pork_barbecue 	415kcal
-<br>tteokbokki 	304kcal
-<br>yukgaejang 	165kcal
+|음식|열량|
+|Bindaetteok|194kcal|
+|cold_noodles|450kcal|
+|japchae|191kcal|
+|pork_barbecue|415kcal|
+|tteokbokki|304kcal|
+|yukgaejang|165kcal|
 
 앞서 10종류의 한식으로 학습시킨 결과를 바탕으로 하여, 제시한 6종류의 한식의 열량을 추정한다.
-
 ```python
 cur_dir = os.getcwd()
 ckpt_dir = 'checkpoints'
@@ -694,31 +685,34 @@ for i in range(len(X2)):
 
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/83fa3fff-2386-45be-8faa-954ee5daee1a)
 
-한식, 중식, 일식 각각의 데이터셋으로 학습을 거친 후 제시한 6종류의 한식에 대하여 추정한 열량의 백분율 상대오차는 다음과 같다.
-<br>
-한식 데이터셋으로 학습 후 열량 추정 결과 및 백분율 상대오차
+한식, 중식, 일식 각각의 데이터셋으로 학습을 거친 후 제시한 6종류의 한식에 대하여 추정한 열량의 백분율 상대오차를 표로 나타내었다.
 
-<br>Bindaetteok 	1073.38kcal	(+453.29%)
-<br>cold_noodles 	505.33kcal	(+12.30%)
-<br>japchae 	642.05kcal	(+236.15)
-<br>pork_barbecue 	209.69kcal	(-49.47%)
-<br>tteokbokki 	110.32kcal	(-63.71%)
-<br>yukgaejang 	606.25kcal	(+267.42%)
+**한식 데이터셋으로 학습을 거친 후 열량을 추정한 결과 및 백분율 상대오차**
 
-중식 데이터셋으로 학습 후 열량 추정 결과 및 백분율 상대오차
+|음식|결과(오차)|
+|Bindaetteok|1073.38kcal(+453.29%)|
+|cold_noodles|505.33kcal(+12.30%)|
+|japchae|642.05kcal(+236.15)|
+|pork_barbecue|209.69kcal(-49.47%)|
+|tteokbokki|110.32kcal(-63.71%)|
+|yukgaejang|606.25kcal(+267.42%)|
 
-<br>Bindaetteok 	470.34kcal	(+142.44%)
-<br>cold_noodles 	245.08kcal	(-45.54%)
-<br>japchae 	820.54kcal	(+329.60%)
-<br>pork_barbecue 	649.21kcal	(+56.44%)
-<br>tteokbokki 	481.19kcal	(+58.28%)
-<br>yukgaejang 	444.62kcal	(+169.47%)
+**중식 데이터셋으로 학습을 거친 후 열량을 추정한 결과 및 백분율 상대오차**
 
-일식 데이터셋으로 학습 후 열량 추정 결과 및 백분율 상대오차
+|음식|결과(오차)|
+|Bindaetteok|470.34kcal(+142.44%)|
+|cold_noodles|245.08kcal(-45.54%)|
+|japchae|820.54kcal(+329.60%)|
+|pork_barbecue|649.21kcal(+56.44%)|
+|tteokbokki|481.19kcal(+58.28%)|
+|yukgaejang|444.62kcal(+169.47%)|
 
-<br>Bindaetteok 	498.82kcal	(+157.12%)
-<br>cold_noodles 	569.11kcal	(+26.47%)
-<br>japchae 	480.60kcal	(+151.62%)
-<br>pork_barbecue 	412.35kcal	(-0.64%)
-<br>tteokbokki 	426.51kcal	(+40.30%)
-<br>yukgaejang 	518.80kcal	(+214.42%)
+**일식 데이터셋으로 학습을 거친 후 열량을 추정 결과 및 백분율 상대오차**
+
+|음식|결과(오차)|
+|Bindaetteok|498.82kcal(+157.12%)|
+|cold_noodles|569.11kcal(+26.47%)|
+|japchae|480.60kcal(+151.62%)|
+|pork_barbecue|412.35kcal(-0.64%)|
+|tteokbokki|426.51kcal(+40.30%)|
+|yukgaejang|518.80kcal(+214.42%)|
