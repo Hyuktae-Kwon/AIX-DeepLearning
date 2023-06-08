@@ -529,7 +529,7 @@ plt.show()
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/af2ab9dd-31d9-4a12-8e69-2cb35201cfe4)
 
 ### Test
-한식 샘플 이미지가 나타내는 음식의 종류를 추정한다. 각 이미지가 담고 있는 음식이 실제로 무엇일지 모델이 이미 트레이닝을 마친 10가지 종류의 음식(한식에서)에 대하여 부여한 기댓값을 나타내었다. 음식 종류의 기댓값을 막대그래프로 나타내었다.
+한식 샘플 이미지가 나타내는 음식의 종류를 추정한다. 모델은 학습의 결과를 바탕으로 '각 이미지가 나타내는 음식'이 '학습한 음식'과 갖는 유사도에 따라 '학습한 음식'에 대하여 갖는 기댓값을 산출한다. 기댓값을 산출할 때 '학습한 음식'으로 이루어지는 후보군 내의 모든 후보 음식에게 부여된 기댓값을 모두 더하면 1(100%)이 된다. 기댓값을 막대그래프로 나타내었다.
 ```python
 def plot_image(i, predictions_array, true_label, img):
     predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]
@@ -595,11 +595,11 @@ for images, labels in test_dataset:
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/aa57f844-542a-4df5-a36a-2cf716959917)
 
 ## Result
-열량 추정을 위하여 임의로 6종류의 한식(Bindaetteok, cold_noodles, japchae, pork_barbecue, tteokbokki, yukgaejang)을 선정하였다. 모델은 학습의 결과를 바탕으로 '각 이미지가 나타내는 음식'이 '학습한 음식'과 갖는 유사도에 따라 '학습한 음식'에 대하여 갖는 기대치를 산출한다. 기대치를 산출할 때 '학습한 음식'으로 이루어지는 후보군 내의 모든 후보 음식에게 부여된 기대치를 모두 더하면 1이 된다. 각 '학습한 음식'의 열량을 Q, 각 '학습한 음식'에 대하여 산출한 기대치를 E라고 할 때 '이미지가 나타내는 음식'에 대하여 추정한 열량은 다음과 같다.
+열량 추정을 위하여 임의로 6종류의 한식(Bindaetteok, cold_noodles, japchae, pork_barbecue, tteokbokki, yukgaejang)을 선정하였다. 각 '학습한 음식'의 열량을 Q, 선정한 6종류의 음식이 각 '학습한 음식'에 대하여 갖는 기댓값을 E라고 할 때 '선정한 이미지가 나타내는 음식'에 대하여 추정한 열량은 다음과 같다.
 
-\sum_{i=1}^N Q_iE_i
+$\sum_{i=1}^N Q_iE_i$
 
-임의로 선정한 6종류의 음식들이 갖는 실제 열량은 다음과 같다.
+임의로 선정한 6종류의 음식이 갖는 실제 열량은 다음과 같다.
 
 |음식|열량|
 |---|---|
