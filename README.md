@@ -121,7 +121,10 @@ for i, j in korean_foods.items():
 중·일식에 대하여 같은 작업을 수행한다.
 ```python
 for i, j in chinese_foods.items():
-  ...
+    ...
+  
+for i, j in japanese_foods.items():
+    ...
 ```
 
 ### Naming & Labeling
@@ -162,6 +165,9 @@ for i in korean_foods.keys():
 중·일식에 대하여 같은 작업을 수행한다.
 ```python
 for i in chinese_foods.keys():
+    ...
+
+for i in japanese_foods.keys():
     ...
 ```
 
@@ -328,6 +334,10 @@ for imagename in image_datas:
 ```python
 ...
 "image_datas = glob('./chinese_food/*/*.jpg')"
+...
+
+...
+"image_datas = glob('./japanese_food/*/*.jpg')"
 ...
 ```
 
@@ -594,7 +604,17 @@ for images, labels in test_dataset:
 
 ### Result
 
-앞서 10종류의 한식으로 학습시킨 결과를 바탕으로 하여, 임의로 선정한 6종류의 한식(Bindaetteok, cold_noodles, japchae, pork_barbecue, tteokbokki, yukgaejang)에 대하여 열량을 추정한다.
+열량 추정을 위하여 임의로 6종류의 한식(Bindaetteok, cold_noodles, japchae, pork_barbecue, tteokbokki, yukgaejang)을 선정하였다. 제시한 음식들이 갖는 실제 열량은 다음과 같다.
+
+<br>Bindaetteok 	194kcal
+<br>cold_noodles 	450kcal
+<br>japchae 	191kcal
+<br>pork_barbecue 	415kcal
+<br>tteokbokki 	304kcal
+<br>yukgaejang 	165kcal
+
+앞서 10종류의 한식으로 학습시킨 결과를 바탕으로 하여, 제시한 6종류의 한식의 열량을 추정한다.
+
 ```python
 cur_dir = os.getcwd()
 ckpt_dir = 'checkpoints'
@@ -665,3 +685,40 @@ for i in range(len(X2)):
     print(Y2[i], calculate_kcal(predictions.numpy()[i]))
 ```
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/b438ad63-bb4d-47cc-a6d4-37fe3968bb24)
+
+중식으로 학습을 거친 후 제시한 6종류의 한식의 열량을 추정한 결과는 다음과 같다.
+
+![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/a1f2cb64-bc88-46f2-a895-34ac1f2ae35f)
+
+일식으로 학습을 거친 후 제시한 6종류의 한식의 열량을 추정한 결과는 다음과 같다.
+
+![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/83fa3fff-2386-45be-8faa-954ee5daee1a)
+
+한식, 중식, 일식 각각의 데이터셋으로 학습을 거친 후 제시한 6종류의 한식에 대하여 추정한 열량의 백분율 상대오차는 다음과 같다.
+<br>
+한식 데이터셋으로 학습 후 열량 추정 결과 및 백분율 상대오차
+
+<br>Bindaetteok 	1073.38kcal	(+453.29%)
+<br>cold_noodles 	505.33kcal	(+12.30%)
+<br>japchae 	642.05kcal	(+236.15)
+<br>pork_barbecue 	209.69kcal	(-49.47%)
+<br>tteokbokki 	110.32kcal	(-63.71%)
+<br>yukgaejang 	606.25kcal	(+267.42%)
+
+중식 데이터셋으로 학습 후 열량 추정 결과 및 백분율 상대오차
+
+<br>Bindaetteok 	470.34kcal	(+142.44%)
+<br>cold_noodles 	245.08kcal	(-45.54%)
+<br>japchae 	820.54kcal	(+329.60%)
+<br>pork_barbecue 	649.21kcal	(+56.44%)
+<br>tteokbokki 	481.19kcal	(+58.28%)
+<br>yukgaejang 	444.62kcal	(+169.47%)
+
+일식 데이터셋으로 학습 후 열량 추정 결과 및 백분율 상대오차
+
+<br>Bindaetteok 	498.82kcal	(+157.12%)
+<br>cold_noodles 	569.11kcal	(+26.47%)
+<br>japchae 	480.60kcal	(+151.62%)
+<br>pork_barbecue 	412.35kcal	(-0.64%)
+<br>tteokbokki 	426.51kcal	(+40.30%)
+<br>yukgaejang 	518.80kcal	(+214.42%)
