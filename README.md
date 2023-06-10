@@ -13,9 +13,9 @@
 <br>I. Background & Scheme
 <br>II. Proposal
 <br>III. Our Method
-    <br>1. Dataset
-    <br>2. Methodology
-    <br>3. Result & Conclusion
+    1. Dataset
+    2. Methodology
+    3. Result & Conclusion
 <br>IV. Related Work
 
 # I. Background & Scheme
