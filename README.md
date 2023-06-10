@@ -594,7 +594,7 @@ for images, labels in test_dataset:
 
 ![image](https://github.com/kwon-0111/AIX-DeepLearning/assets/132051184/aa57f844-542a-4df5-a36a-2cf716959917)
 
-## Result
+## Result & Conclusion
 열량 추정을 위하여 임의로 6종류의 한식(Bindaetteok, cold_noodles, japchae, pork_barbecue, tteokbokki, yukgaejang)을 선정하였다. 각 '학습한 음식'의 열량을 Q, 선정한 6종류의 음식을 나타내는 어떤 이미지가 각 '학습한 음식'에 대하여 갖는 기댓값을 E라고 할 때 그 이미지가 나타내는 음식에 대하여 모델이 추정하는 열량은 다음과 같다.
 
 $$\sum_{i=1}^N Q_iE_i$$
@@ -724,3 +724,10 @@ for i in range(len(X2)):
 |pork_barbecue|412.35kcal(-0.64%)|
 |tteokbokki|426.51kcal(+40.30%)|
 |yukgaejang|518.80kcal(+214.42%)|
+
+한식 데이터셋으로 학습한 후에 새로운 이미지가 나타내는 음식(한식)의 열량을 추정했을 때, 중식과 일식 데이터셋으로 학습한 후 열량을 추정했을 때보다 높은 정확도를 보여주지 않았다. 한식이 가지는 중식 및 일식과의 차이점이 학습 과정에서 모델에게 인식되지 않았거나 각 데이터셋 종류 별 학습 후 추정 결과에서 유의미한 정확도 차이가 나타날 만큼 한식, 중식, 일식이 구분되지 않는다.
+
+**Work distributed**
+<br>권혁태: dataset processing, write up
+<br>유시형: code implementation
+<br>박영주: write up
