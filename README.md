@@ -8,7 +8,7 @@
 
 2019082333 박영주 marchingwthu@gmail.com
 
-**Table of Contents**
+**Contents**
 
 I. Background & Scheme
 <br>II. Proposal
