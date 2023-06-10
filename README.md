@@ -11,12 +11,12 @@
 **Table of Contents**
 
 I. Background & Scheme
-II. Proposal
-III. Our Method
-    1. Dataset
-    2. Methodology
-    3. Result & Conclusion
-IV. Related Work
+<br>II. Proposal
+<br>III. Our Method
+<br>    1. Dataset
+<br>    2. Methodology
+<br>    3. Result & Conclusion
+<br>IV. Related Work
 
 # I. Background & Scheme
 CNN 기법을 이용하여 서로 다른 이미지를 종류에 따라 분류하는 방법은 알려져 있다. 이를 기반으로 하여 모델이 인터넷에서 추출한 데이터셋을 바탕으로 학습한 결과를 근거로 처음 접하는 한식의 이미지를 보고 이미지에 해당하는 음식의 단위 제공량 당 열량을 추측하게끔 하고자 한다. Google image searching을 통해 얻은 중식과 일식의 검색량 상위에 해당하는 각 10종류의 음식 데이터셋에서 음식 종류별로 실제 단위 제공량 당 열량을 부여하고, 모델을 학습시킬 계획이다. 학습을 마친 모델이 주어진 한식의 이미지가 경험한 이미지 중 확률적으로 어떤 것에 가까운지 판단하여 해당 이미지가 indicating하는 음식의 단위 제공량 당 열량의 추정치를 결과로 내놓는 일련의 과정을 Tensorflow 내의 API, Keras를 이용한 CNN으로 구현하겠다.
@@ -731,7 +731,7 @@ for i in range(len(X2)):
 
 **Work Distributed**
 
-<br>권혁태: dataset processing, write up
+권혁태: dataset processing, write up
 <br>유시형: code implementation
 <br>박영주: write up
 
@@ -740,17 +740,17 @@ for i in range(len(X2)):
 **Libraries and Modules Used for the Work**
 
 selenium
-urllib.request
-os
-pandas
-json
-PIL
-numpy
-tensorflow
-matplotlib
-glob
-sklearn.model_selection
-re
+<br>urllib.request
+<br>os
+<br>pandas
+<br>json
+<br>PIL
+<br>numpy
+<br>tensorflow
+<br>matplotlib
+<br>glob
+<br>sklearn.model_selection
+<br>re
 
 **Blogs Used for the Work**
 
