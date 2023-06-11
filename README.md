@@ -129,7 +129,7 @@ for i, j in japanese_foods.items():
     ...
 ```
 
-### Naming & Labeling
+### Naming
 다운로드 이미지 파일들의 이름을 변경한다.
 ```python
 
@@ -145,21 +145,6 @@ for i in korean_foods.keys():
         dst = os.path.join(file_path, i + '_' + str(j) + '.jpg')
         os.rename(src, dst)
         j+=1
-```
-
-Naming 작업이 완료되면 각각의 이미지에 해당 이미지의 id와 음식의 종류를 labeling 하는 작업을 수행한다.
-```python
-for i in korean_foods.keys():
-    image_name = i.replace(" ", "_") 
-    file_names = os.listdir('./'+image_name)
-
-    tmp_json = [] 
-   
-    for j in file_names: 
-        tmp_json.append({'image_id': j,'label': image_name}) 
-    
-    with open(i + '.json', 'w') as outfile: 
-        json.dump(tmp_json, outfile, indent=4, sort_keys=True)
 ```
 
 중·일식에 대하여 같은 작업을 수행한다.
@@ -465,7 +450,7 @@ test_dataset = tf.data.Dataset.from_tensor_slices((test_images, test_labels)).ba
 				N_BATCH)
 ```
 
-Sequential API를 사용하여 Model을 구성한다.
+Sequential API를 사용하여 Model을 구성한다. 활성화함수로는 RELU를 사용하였다.
 ```python
 def create_model():
     model = keras.Sequential()
