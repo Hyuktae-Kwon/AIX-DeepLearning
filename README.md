@@ -176,6 +176,9 @@ for i in japanese_foods.keys():
 ## 2. Methodology
 
 ### 이미지 전처리
+음식 별 이미지 데이터의 개수를 확인한다.
+![image_count](https://github.com/kwon-0111/AIX-DeepLearning/assets/68896078/c832f862-31cb-4369-bdaf-942835561e42)
+<
 ```python
 import os
 from PIL import Image
