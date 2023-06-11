@@ -234,7 +234,7 @@ for i, j in korean_foods.items():
                                     width_shift_range=0.3
         )
 
-# ImageDataGenerator로 변경된 이미지 확인
+# 변경된 이미지 확인
     it = datagen.flow(samples, batch_size=1)
     fig = plt.figure(figsize=(20,20))
     plt.title(i)
@@ -247,7 +247,7 @@ for i, j in korean_foods.items():
 ```
 
 ### Data Augmentation
-Data augmentation을 준비한다.
+위와 같은 방법으로 Data augmentation을 진행한 후 학습을 진행시켜보았으나 한정된 컴퓨터 성능으로 인해 학습 시간이 지나치게 길어져 이미지 augmentation을 간소화하여 수행하였다.
 ```python
 from glob import glob
 from PIL import Image
