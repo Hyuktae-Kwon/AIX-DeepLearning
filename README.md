@@ -175,8 +175,32 @@ for i in japanese_foods.keys():
 
 ## 2. Methodology
 
-### 이미지 전처리
+### 이미지 전처리 및 Data Augmentation
 음식 별 이미지 데이터의 개수를 확인한다.
+```python
+directory = 'korean_foods'
+
+tmp = os.listdir(directory)
+subdirectories = []
+for i in tmp:
+    if os.path.isdir(i):
+        subdirectories.append(i)
+
+image_counts = [0] * len(subdirectories) 
+
+for i, subdir in enumerate(subdirectories):
+    subdir_path = os.path.join(directory, subdir)
+    images = os.listdir(subdir_path)
+    image_counts[i] = len(images) 
+
+plt.rc('font', family='Malgun Gothic')
+plt.bar(subdirectories, image_counts)
+plt.xlabel('음식')
+plt.ylabel('이미지 개수')
+plt.title('음식 별 이미지 데이터 개수')
+plt.xticks(rotation=45)
+plt.show()
+```
 ![image_count](https://github.com/kwon-0111/AIX-DeepLearning/assets/68896078/c832f862-31cb-4369-bdaf-942835561e42)
 <br>
 ```python
@@ -214,8 +238,7 @@ for i, j in korean_foods.items():
         resized_img.save("./" + image_name + "_resized/" + title + "_r" + ext)
 
 ```
-
-데이터 전처리를 실시한다.
+모델이 적은 개수의 이미지로부터 더 많은 정보를 학습을 수 있도록 data augmentation을 시킨다. 이미지에 좌우/상하 반전, 회전, 이동 등의 변형을 가하여 더 많은 데이터를 기반으로 학습하는 것과 같은 효과를 낼 수 있다. 또한 overfitting을 방지하고 새로운 이미지를 잘 분류할 수 있게 된다.
 ```python
 for i, j in korean_foods.items():
     image_name = i.replace(" ", "_")
@@ -236,20 +259,8 @@ for i, j in korean_foods.items():
                                     height_shift_range=0.3,
                                     width_shift_range=0.3
         )
-
-# 변경된 이미지 확인
-    it = datagen.flow(samples, batch_size=1)
-    fig = plt.figure(figsize=(20,20))
-    plt.title(i)
-    for i in range(12):
-        plt.subplot(4, 3, 1 + i)
-        batch = it.next()
-        image = batch[0].astype('uint8')
-        plt.imshow(image)
-    plt.show()
 ```
 
-### Data Augmentation
 위와 같은 방법으로 Data augmentation을 진행한 후 학습을 진행시켜보았으나 한정된 컴퓨터 성능으로 인해 학습 시간이 지나치게 길어져 이미지 augmentation을 간소화하여 수행하였다.
 ```python
 from glob import glob
