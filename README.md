@@ -246,7 +246,7 @@ for i, j in korean_foods.items():
     plt.show()
 ```
 
-### Data ugmentation
+### Data Augmentation
 Data augmentation을 준비한다.
 ```python
 from glob import glob
