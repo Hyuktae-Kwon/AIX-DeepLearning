@@ -130,7 +130,7 @@ for i, j in japanese_foods.items():
 ```
 
 ### Naming
-다운로드 이미지 파일들의 이름을 변경한다.
+다운로드된 이미지 파일들의 이름을 변경한다.
 ```python
 
 for i in korean_foods.keys():
@@ -221,7 +221,7 @@ for i, j in korean_foods.items():
         resized_img.save("./" + image_name + "_resized/" + title + "_r" + ext)
 
 ```
-모델이 적은 개수의 이미지로부터 더 많은 정보를 학습을 수 있도록 data augmentation을 시킨다. 이미지에 좌우/상하 반전, 회전, 이동 등의 변형을 가하여 더 많은 데이터를 기반으로 학습하는 것과 같은 효과를 낼 수 있다. 또한 overfitting을 방지하고 새로운 이미지를 잘 분류할 수 있게 된다.
+모델이 적은 개수의 이미지로부터 더 많은 정보를 학습할 수 있도록 data augmentation을 진행한다. 이미지에 좌우/상하 반전, 회전, 이동 등의 변형을 가하여 더 많은 데이터를 기반으로 학습하는 것과 같은 효과를 낼 수 있다. 또한 overfitting을 방지하고 새로운 이미지를 잘 분류할 수 있게 된다.
 ```python
 for i, j in korean_foods.items():
     image_name = i.replace(" ", "_")
@@ -244,7 +244,7 @@ for i, j in korean_foods.items():
         )
 ```
 
-위와 같은 방법으로 Data augmentation을 진행한 후 학습을 진행시켜보았으나 한정된 컴퓨터 성능으로 인해 학습 시간이 지나치게 길어져 이미지 augmentation을 간소화하여 수행하였다.
+위와 같은 방법으로 data augmentation을 진행한 후 학습을 진행시켜 보았으나 한정된 컴퓨터 성능으로 인해 학습 시간이 지나치게 길어져 augmentation을 간소화하여 수행하였다.
 ```python
 from glob import glob
 from PIL import Image
@@ -733,7 +733,7 @@ for i in range(len(X2)):
 
 권혁태: dataset processing, write up
 <br>유시형: code implementation
-<br>박영주: write up
+<br>박영주: write up, YouTube recording
 
 # IV. Related Work
 
