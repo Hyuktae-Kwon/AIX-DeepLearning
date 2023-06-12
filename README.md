@@ -221,7 +221,7 @@ for i, j in korean_foods.items():
         resized_img.save("./" + image_name + "_resized/" + title + "_r" + ext)
 
 ```
-모델이 적은 개수의 이미지로부터 더 많은 정보를 학습할 수 있도록 data augmentation을 진행한다. 이미지에 좌우/상하 반전, 회전, 이동 등의 변형을 가하여 더 많은 데이터를 기반으로 학습하는 것과 같은 효과를 낼 수 있다. 또한 overfitting을 방지하고 새로운 이미지를 잘 분류할 수 있게 된다.
+모델이 적은 개수의 이미지로부터 더 많은 정보를 학습할 수 있도록 Data Augmentation을 진행한다. 이미지에 좌우/상하 반전, 회전, 이동 등의 변형을 가하여 더 많은 데이터를 기반으로 학습하는 것과 같은 효과를 낼 수 있다. 또한 overfitting을 방지하고 새로운 이미지를 잘 분류할 수 있게 된다.
 ```python
 for i, j in korean_foods.items():
     image_name = i.replace(" ", "_")
@@ -244,7 +244,7 @@ for i, j in korean_foods.items():
         )
 ```
 
-위와 같은 방법으로 data augmentation을 진행한 후 학습을 진행시켜 보았으나 한정된 컴퓨터 성능으로 인해 학습 시간이 지나치게 길어져 augmentation을 간소화하여 수행하였다.
+위와 같은 방법으로 Data Augmentation을 진행한 후 학습을 진행시켜 보았으나 한정된 컴퓨터 성능으로 인해 학습 시간이 지나치게 길어져 Augmentation을 간소화하여 수행하였다.
 ```python
 from glob import glob
 from PIL import Image
@@ -326,7 +326,7 @@ for imagename in image_datas:
 }
 ```
 
-중, 일식의 데이터셋에 대하여 Data augmentation을 수행한다.
+중, 일식의 데이터셋에 대하여 Data Augmentation을 수행한다.
 ```python
 ...
 "image_datas = glob('./chinese_foods/*/*.jpg')"
